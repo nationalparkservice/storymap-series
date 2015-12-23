@@ -1,0 +1,113 @@
+
+Authorization testing and issues
+
+===========================================
+DEVELOPMENT with AGOL item
+===========================================
+
+I can create, save, edit and load a map series on AGOL from scratch using the development version;
+http://localhost/dev/mapseries/?fromScratch
+http://localhost/dev/mapseries/?appid=dfdb0a6fcc144bbdbe69fa7a9f84cbe4&edit
+http://localhost/dev/mapseries/?appid=dfdb0a6fcc144bbdbe69fa7a9f84cbe4
+All require me to authenticate with AGOL using the Identity Manager;
+however I cannot share the map from the builder, nor open the map (view Live) from builder, since it is not shared.
+Check in common/builder/SharePopup.js (line 66+) which checks for isProduction
+
+===========================================
+PRODUCTION on LOCALHOST with AGOL item
+===========================================
+
+With the production build:
+http://localhost/dev/mapseries1/?fromScratch
+http://localhost/dev/mapseries1/?appid=dfdb0a6fcc144bbdbe69fa7a9f84cbe4&edit
+http://localhost/dev/mapseries1/?appid=dfdb0a6fcc144bbdbe69fa7a9f84cbe4
+
+I, get the following error:
+
+	"Authorized owner hasn't been configured."
+
+unless an "Authorized Owner" is defined.  This is set on line 48 of the deployed index.html:
+				authorizedOwners: ["regan_sarwas@nps.gov"]
+Based on the comments, it seems that an authorized owner is someone whose appids can be viewed in
+this deployment of the map series application.  To allow anyones apps to be viewed Use:
+				authorizedOwners: ["*"]
+
+This allows viewing and editing (still must log in for both since the map is not shared)
+but fromScratch does not work. It tries to redirects me to the login page on AGOL.
+If the redirect is successful and I log in, I do not return to the builder.
+
+In addition, We still can't share from the builder.  It now says:
+
+	"Sorry, sharing your story from the Builder is not supported since this application is not hosted in %PRODUCT%."
+
+I need to assess this issue, since we can share fine from the older version of Map Tour.
+
+Once the app is shared (from AGOL, not the builder), then viewing works fine from production and development;
+editing also works just fine (the Identity Manager is used).
+
+===========================================
+PRODUCTION on GITHUB with AGOL item
+===========================================
+
+Trying on GitHub Pages using the master build of v1.4.1. of the map series with authorizedOwners: ["*"]
+http://regan-sarwas.github.io/storymaps/mapseries?fromScratch
+http://regan-sarwas.github.io/storymaps/mapseries?appid=dfdb0a6fcc144bbdbe69fa7a9f84cbe4
+http://regan-sarwas.github.io/storymaps/mapseries?appid=dfdb0a6fcc144bbdbe69fa7a9f84cbe4&edit
+
+viewing and editing a public map on AGOL works fine
+viewing and editing a private map on AGOL works fine
+
+fromScratch redirects to AGOL and never returns.
+
+
+===========================================
+DEVELOPMENT with PORTAL item
+===========================================
+
+To work with portal, I must change the last few lines in [src|deploy]/app/config.js
+	DEFAULT_SHARING_URL: "//gisportal.nps.gov/arcgis/sharing/content/items",
+	DEFAULT_PROXY_URL: "//gisportal.nps.gov/arcgis/sharing/proxy"
+and be on the nps network.
+
+http://localhost/dev/mapseries/?fromScratch
+http://localhost/dev/mapseries/?appid=xxx
+http://localhost/dev/mapseries/?appid=xxx&edit
+
+
+===========================================
+PRODUCTION on LOCALHOST with PORTAL item
+===========================================
+
+===========================================
+PRODUCTION on PORTAL with PORTAL item
+===========================================
+
+
+===========================================
+Map Journal and Map Tour (limited testing)
+===========================================
+
+AGOL maptour appid=fed880eb0e9945b9912525238a1480fd
+AGOL mapjournal appid=809e576454ed4bf995b0fac49970dc36
+
+* fromScratch on production fails the same as map series
+* fromScratch on development works just fine.
+* sharing from maptour builder works fine in dev and prod (remember authorizedOwners: ["*"] in deploy/index.html)
+* sharing from mapjournal builder (prod or dev) is the same as map series
+
+
+===========================================
+SUMMARY
+===========================================
+
+Make sure to set authorizedOwners: ["*"] in deploy/index.html
+
+Everything seems to work fine in dev and production from localhost to AGOL except:
+  * fromScratch does not work on Production
+  * neither dev or prod allows sharing.
+
+*** Use the development fromScratch Code in Production (CRITICAL)
+
+*** Use sharing code from Map Tour in Map Series and Map Journal (workaround, share from AGOL)
+
+*** It would be nice if the Identity Manager could cache credentials with the browser.
