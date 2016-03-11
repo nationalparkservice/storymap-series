@@ -187,6 +187,8 @@ define(["lib-build/tpl!./NavBar",
 				
 				container.find('.entry').click(onTitleClick);
 				
+				addKeyNavToNavBar();
+
 				_this.resize();
 			}
 			
@@ -221,6 +223,16 @@ define(["lib-build/tpl!./NavBar",
 					"NavBarActive"
 				);
 				
+				// Focus
+				CommonHelper.addCSSRule(
+					".nav-bar .dropdown-toggle:focus, \
+					.nav-bar li:not(.active) .entryLbl:focus { \
+						color: " + colors.tabTextHover  + "; \
+						background-color: " + colors.tabHover  + " !important; \
+					}",
+					"NavBarFocus"
+				);
+
 				// Hover
 				CommonHelper.addCSSRule(
 					".nav-bar .dropdown:not(.active):hover .dropdown-toggle, \
@@ -298,6 +310,22 @@ define(["lib-build/tpl!./NavBar",
 			function initEvents()
 			{
 				//
+			}
+
+			function addKeyNavToNavBar()
+			{
+				// All the clickable entries are links (a elements) but they have no href, so they are not focusable by default
+				// This function will make them focusable, and accept keyclick input.
+				// This should be done in initEvents(); but the initial elements are destroyed and recreated by render(),
+				// so this function is called by render().
+				container.find('a')
+					.attr("tabindex", "0")
+					.on('keydown', function(e) {
+						if (e.keyCode === 13) {
+							$(e.target).click();
+							return false;
+						}
+					});
 			}
 		};
 	}

@@ -36,6 +36,8 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 				
 				render(entries, layoutOptions);
 				
+				addKeyNavToAccordionPanel();
+
 				this.showEntryIndex(entryIndex, false, true);
 			};
 			
@@ -251,6 +253,18 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 			function initEvents()
 			{
 				//
+			}
+
+			function addKeyNavToAccordionPanel()
+			{
+				container.find(".accordion-header-content")
+					.attr("tabindex", "0")
+					.on('keydown', function(e) {
+						if (e.keyCode === 13) {
+							$(e.target).click();
+							return false;
+						}
+					});
 			}
 		};
 	}
