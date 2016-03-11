@@ -18,7 +18,7 @@ define(["lib-build/tpl!./Geocoder",
 						enableButtonMode: true
 					}).then(function(geocoder) {
 						_geocoder = geocoder;
-						container.find('.esriGeocoderContainer input, .esriGeocoderSearch').attr("tabindex", "-1");
+						container.find('.esriGeocoderContainer input, .esriGeocoderSearch');
 					});
 				}
 

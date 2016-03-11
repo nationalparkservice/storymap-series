@@ -2,16 +2,14 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 		"lib-build/css!./AccordionPanel",
 		"lib-build/css!./Common",
 		"../StoryText",
-		"storymaps/common/utils/CommonHelper",
-		"dojo/topic"
+		"storymaps/common/utils/CommonHelper"
 	], 
 	function(
 		viewEntryTpl,
 		viewCss,
 		commonCss,
 		StoryText,
-		CommonHelper,
-		topic
+		CommonHelper
 	){		
 		return function AccordionPanel(container, isInBuilder, navigationCallback)
 		{
@@ -137,37 +135,6 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 					container.find('.content').html(contentHTML);
 				
 				container.find(".accordion-header").click(onEntryClick);
-				
-				var accordionHeaders = container.find('.accordion-header-content');
-				
-				// Fire a click event when focusing through keyboard and prevent double event when clicking with mouse
-				accordionHeaders
-					.focus(function(){
-						if (!$(this).data("mouseDown"))
-							$(this).click();
-					})
-					.mousedown(function(){
-						$(this).data("mouseDown", true);
-					})
-					.mouseup(function(){
-						$(this).removeData("mouseDown");
-					});
-				
-				// Find the last entry header or "element" of it's description
-				var lastTabElement = accordionHeaders.last();
-				if( lastTabElement.siblings(".accordion-content").find("[tabindex=0]").length )
-					lastTabElement = lastTabElement.siblings(".accordion-content").find("[tabindex=0]").last();
-				
-				// Tab on the last element has to navigate to the header
-				lastTabElement.on('keydown', function(e) {
-					if( e.keyCode === 9 && ! e.shiftKey ) {
-						topic.publish("story-tab-navigation", { 
-							from: "panel", 
-							direction: "forward"
-						});
-						return false;
-					}
-				});
 				
 				//setAccordionContentHeight();
 			}

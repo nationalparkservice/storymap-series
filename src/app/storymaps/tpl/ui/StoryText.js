@@ -29,11 +29,6 @@ define(["dojo/topic",
 			
 			// Add tabindex to not empty elements
 			str2 = $(str2);
-			str2.find('.description > *').each(function(i, elem){
-				var $elem = $(elem);
-				if ( $elem.html() != "&nbsp;" )
-					$elem.attr("tabindex", "0");
-			});
 
 			return str2;
 		}

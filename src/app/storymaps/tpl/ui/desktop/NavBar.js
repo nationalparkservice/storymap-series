@@ -187,31 +187,6 @@ define(["lib-build/tpl!./NavBar",
 				
 				container.find('.entry').click(onTitleClick);
 				
-				// Tab navigation
-				container.find('.entryLbl').on('keydown', function(e) {
-					if( e.keyCode === 9 ) {
-						topic.publish("story-tab-navigation", { 
-							from: "nav", 
-							direction: e.shiftKey ? "backward" : "forward"
-						});
-						return false;
-					}
-				});
-				
-				// Fire a click event when focusing through keyboard and prevent double event when clicking with mouse
-				container.find('.entryLbl').eq(0)
-					.focus(function(){
-						if (!$(this).data("mouseDown") && ! $(this).parent('.entry').hasClass("active")){
-							$(this).parent('.entry').click();
-						}
-					})
-					.mousedown(function(){
-						$(this).data("mouseDown", true);
-					})
-					.mouseup(function(){
-						$(this).removeData("mouseDown");
-					});
-				
 				_this.resize();
 			}
 			
