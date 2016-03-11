@@ -417,6 +417,8 @@ define(["lib-build/css!./MainView",
 				
 				if ( builderView )
 					builderView.updateUI();
+
+				addAccessibilityToDropdowns();
 			}
 
 			function initLayout()
@@ -799,6 +801,41 @@ define(["lib-build/css!./MainView",
 			};
 			
 			
+			function addAccessibilityToDropdowns() {
+				//From: https://medium.com/@mariusc23/making-bootstrap-dropdowns-more-accessible-27b2566abdda#.rlon2pqrx
+				// 1 & 2. adding a couple aria-roles to help screen readers
+				// 3. setting focus on the first item in the list when the dropdown opens
+				// 4. setting focus back to the dropdown toggle when the dropdown closes
+
+				// On dropdown open
+				$(document).on('shown.bs.dropdown', function(event) {
+					var dropdown = $(event.target);
+
+					// Set aria-expanded to true
+					dropdown.find('.dropdown-menu').attr('aria-expanded', true);
+
+					// Set focus on the first link in the dropdown
+					setTimeout(function() {
+						console.log(document.activeElement);
+						//var firstItem = dropdown.find('.dropdown-menu li.visible:first a');
+						var firstItem = dropdown.find('.dropdown-menu li.visible:first a');
+						console.log(firstItem.get(0));
+						firstItem.get(0).focus();
+						console.log(document.activeElement);
+					}, 10);
+				});
+				// On dropdown close
+				$(document).on('hidden.bs.dropdown', function(event) {
+					var dropdown = $(event.target);
+
+					// Set aria-expanded to false
+					dropdown.find('.dropdown-menu').attr('aria-expanded', false);
+
+					// Set focus back to dropdown toggle
+					dropdown.find('.dropdown-toggle').focus();
+				});
+			}
+
 			//
 			// Story events
 			//
