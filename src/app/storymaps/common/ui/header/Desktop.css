@@ -118,7 +118,7 @@
 }
 
 #headerDesktop .logoLink {
-	outline: none;
+	padding: 5px;
 }
 
 #headerDesktop .shareBtns {
