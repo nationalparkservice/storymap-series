@@ -1311,11 +1311,18 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					mapDiv.attr("tabIndex", "0");
 					//A map should only respond to key navigation when it has focus
 					map.disableKeyboardNavigation();
+					//IE focuses on the SVG layers in the map div if this is not set
+					mapDiv.find('svg').attr("focusable", "false");
+					//Add/remove behaviors when the map gets/looses focus
 					mapDiv.focus(function () {
-						//FIXME: the user also has to click in the map to make it navigable
+						//FIXME: the user also has to move the mouse in the map to make it navigable
 						map.enableKeyboardNavigation();
 						//Focus ring is not visible due to 0 margins, so flash the map to indicate focus
-						mapDiv.fadeOut(100).fadeIn(100);
+						//IE looses the focus when an element becomes invisible (fades out)
+						if (! has('ie') && ! has('trident')){
+							mapDiv.fadeOut(100).fadeIn(100);
+						}
+						//FIXME: need some way to show the map has focus in IE.
 					});
 					mapDiv.blur(function () {
 						map.disableKeyboardNavigation();
