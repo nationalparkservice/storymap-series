@@ -6,6 +6,11 @@ app.cfg = {
 	// Maximum number of entries
 	MAX_NB_ENTRIES: 30,
 	
+	// Maximum number of preloaded maps (set to MAX_NB_ENTRIES for all,
+	// currently limited due to detrimental effect on responsiveness of startup.
+	// Can also be set on a story by story case with url parameter preload=N
+	MAX_NB_PRELOADED_MAPS: 4,
+	
 	TIMEOUT_VIEWER_LOAD: 5000,
 	TIMEOUT_VIEWER_REQUEST: 12000,
 	TIMEOUT_BUILDER_REQUEST: 20000,

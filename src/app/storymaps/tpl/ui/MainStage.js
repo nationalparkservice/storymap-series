@@ -428,16 +428,22 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					firstEntry = entries[0],
 					entriesButFirst = entries.slice(1),
 					// TODO temporarily this limit the number of preloaded maps to 4
+					maxPreloadedMaps = app.cfg.MAX_NB_PRELOADED_MAPS,
+					maxPreloadByParam = parseInt(CommonHelper.getUrlParams().preload, 10),
 					nbMapsPreloaded = 0;
 
 				if ( ! firstEntry )
 					return;
 
+				if (! isNaN(maxPreloadByParam)) {
+					maxPreloadedMaps = maxPreloadByParam;
+				}
+
 				// If the first entry is a map
 				if (firstEntry.media && firstEntry.media.type == "webmap" ) {
 					// Preload all other map
 					$.each(entriesButFirst, function(i, entry){
-						if ( entry.media && entry.media.type == "webmap" && (noMapLimit || nbMapsPreloaded < 4) ) {
+						if ( entry.media && entry.media.type == "webmap" && (noMapLimit || nbMapsPreloaded < maxPreloadedMaps) ) {
 							updateMainMediaMaps(
 								entry.media.webmap.id,
 								entry,
@@ -476,7 +482,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 								handle.remove();
 
 								$.each(entriesButFirst.slice(firstMapIndex), function(i, entry) {
-									if ( entry.media && entry.media.type == "webmap" && (noMapLimit || nbMapsPreloaded < 4) ) {
+									if ( entry.media && entry.media.type == "webmap" && (noMapLimit || nbMapsPreloaded < maxPreloadedMaps) ) {
 										updateMainMediaMaps(
 											entry.media.webmap.id,
 											entry,

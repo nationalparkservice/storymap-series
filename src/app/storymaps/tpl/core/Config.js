@@ -215,6 +215,7 @@ define([],
 					&& app.cfg.HEADER_SOCIAL  
 					
 					&& app.cfg.MAX_NB_ENTRIES
+					&& app.cfg.MAX_NB_PRELOADED_MAPS
 					
 					&& app.cfg.TIMEOUT_VIEWER_LOAD
 					&& app.cfg.TIMEOUT_VIEWER_REQUEST
