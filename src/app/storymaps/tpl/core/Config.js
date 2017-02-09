@@ -3,8 +3,8 @@ define([],
 		// Header default configuration
 		var HEADER_LOGO_URL = "resources/tpl/viewer/icons/esri-logo.png",
 			HEADER_LOGO_TARGET = "http://www.esri.com",
-			HEADER_LINK_TEXT = "A story map",
-			HEADER_LINK_URL = "http://storymaps.arcgis.com";
+			HEADER_LINK_TEXT = "An NPS story map",
+			HEADER_LINK_URL = "http://www.nps.gov";
 
 		app.appCfg = {
 			supportWebmapPreviewAGOL: false,
