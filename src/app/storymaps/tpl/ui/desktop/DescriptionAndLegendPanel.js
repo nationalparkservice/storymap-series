@@ -3,16 +3,16 @@ define(["lib-build/tpl!./DescriptionAndLegendPanelEntry",
 		"lib-build/css!./Common",
 		"../../core/WebApplicationData",
 		"../StoryText",
-	], 
 		"storymaps/common/utils/CommonHelper"
+	],
 	function(
 		viewEntryTpl,
 		viewCss,
 		commonCss,
 		WebApplicationData,
 		StoryText,
-	){		
 		CommonHelper
+	) {
 		return function DescriptionAndLegendPanel(container, isInBuilder)
 		{
 			var _entries = null,

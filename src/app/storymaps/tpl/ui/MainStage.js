@@ -1343,10 +1343,10 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					});
 				};
 
-				if (response.map.loaded) {
+				if (map.loaded) {
 					addKeyNavToLoadedMap();
 				} else {
-					app.map.on("load", function() {
+					map.on("load", function() {
 						addKeyNavToLoadedMap();
 					});
 				}
