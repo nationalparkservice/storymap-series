@@ -5,8 +5,20 @@ define(["dojo/topic"], function(topic) {
 
   // The application is ready
   topic.subscribe("tpl-ready", function(){
-    /*
-     * Custom Javascript to be executed when the application is ready goes here
-     */
+    // Add tabstop and click handlers to 
+    var selectors =
+      '#headerMobile span.menu-btn, ' +
+      '#headerMobile span.share-btn, ' +
+      '#headerMobile .menu-entry, ' +
+      '#mobileInfoBtn, .mobileInfo, ' +
+      '#footerMobile .embed-btn';
+    $(selectors)
+      .attr("tabindex", "0")
+      .on('keydown', function (e) {
+        if (e.keyCode === 13) {
+          $(e.target).click();
+          return false;
+        }
+      });
   });
 });
