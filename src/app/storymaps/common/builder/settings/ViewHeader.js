@@ -23,13 +23,13 @@ define(["lib-build/tpl!./ViewHeader",
 				_contentContainer = contentContainer;
 				_contentContainer.append(viewTpl(_.extend({}, i18n.commonCore.settingsHeader,
 					{share: i18n.commonCore.builderPanel.buttonShare, 
-					 socialExplain: "For a standard NPS banner, enter the 4 letter UNITCODE (uppercase) for " +
-					 "your park in the Text box and leave the Link box empty " +
-					 "(a well known unit code will create a link automatically). " +
-					 "For a non-standard banner, enter 'Main Text|Small Upper Text|Small Lower Text' " +
-					 "in the Text box (some experimenting might be required).  If you want the 'Main Text' " +
-					 "to be a hyperlink, enter the url in the Link box. " +
-					 "The banner will not display when embeded in another page."}
+						socialExplain: "For a standard NPS banner, enter the 4 letter UNITCODE (uppercase) for " + 
+						"your park in the Text box and leave the Link box empty " + 
+						"(a well known unit code will create a link automatically). " + 
+						"For a non-standard banner, enter 'Main Text|Small Upper Text|Small Lower Text' " + 
+						"in the Text box (some experimenting might be required).  If you want the 'Main Text' " + 
+						"to be a hyperlink, enter the url in the Link box. " + 
+						"The banner will not display when embeded in another page."}
 				)));
 				_logoInput = _contentContainer.find("#logoInput");
 				_logoTargetInput = _contentContainer.find("#logoTargetInput");
