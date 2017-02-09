@@ -114,6 +114,16 @@ define(["lib-build/tpl!./Legend",
 				_container.find('.expandStartup').change(onSettingsChange);
 
 				_this.updatePlacementSettings(placementSettings);
+
+				_container.find(".collapseBtn")
+					.attr("tabindex", "0")
+					.on('keydown', function (e) {
+						if (e.keyCode === 13) {
+							$(e.target).click();
+							return false;
+						}
+					});
+
 			}
 
 			//

@@ -187,31 +187,8 @@ define(["lib-build/tpl!./NavBar",
 				
 				container.find('.entry').click(onTitleClick);
 				
-				// Tab navigation
-				container.find('.entryLbl').on('keydown', function(e) {
-					if( e.keyCode === 9 ) {
-						topic.publish("story-tab-navigation", { 
-							from: "nav", 
-							direction: e.shiftKey ? "backward" : "forward"
-						});
-						return false;
-					}
-				});
-				
-				// Fire a click event when focusing through keyboard and prevent double event when clicking with mouse
-				container.find('.entryLbl').eq(0)
-					.focus(function(){
-						if (!$(this).data("mouseDown") && ! $(this).parent('.entry').hasClass("active")){
-							$(this).parent('.entry').click();
-						}
-					})
-					.mousedown(function(){
-						$(this).data("mouseDown", true);
-					})
-					.mouseup(function(){
-						$(this).removeData("mouseDown");
-					});
-				
+				addKeyNavToNavBar();
+
 				_this.resize();
 			}
 			
@@ -246,6 +223,16 @@ define(["lib-build/tpl!./NavBar",
 					"NavBarActive"
 				);
 				
+				// Focus
+				CommonHelper.addCSSRule(
+					".nav-bar .dropdown-toggle:focus, \
+					.nav-bar li:not(.active) .entryLbl:focus { \
+						color: " + colors.tabTextHover  + "; \
+						background-color: " + colors.tabHover  + " !important; \
+					}",
+					"NavBarFocus"
+				);
+
 				// Hover
 				CommonHelper.addCSSRule(
 					".nav-bar .dropdown:not(.active):hover .dropdown-toggle, \
@@ -323,6 +310,22 @@ define(["lib-build/tpl!./NavBar",
 			function initEvents()
 			{
 				//
+			}
+
+			function addKeyNavToNavBar()
+			{
+				// All the clickable entries are links (a elements) but they have no href, so they are not focusable by default
+				// This function will make them focusable, and accept keyclick input.
+				// This should be done in initEvents(); but the initial elements are destroyed and recreated by render(),
+				// so this function is called by render().
+				container.find('a')
+					.attr("tabindex", "0")
+					.on('keydown', function(e) {
+						if (e.keyCode === 13) {
+							$(e.target).click();
+							return false;
+						}
+					});
 			}
 		};
 	}

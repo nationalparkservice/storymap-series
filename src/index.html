@@ -102,19 +102,19 @@
 							<button class="btn btn-xs btn-warning check-story"></button>
 							<button class="btn btn-xs btn-warning share-story"></button>
 						</span>
-						<button type="button" class="switchBuilder btn btn-xs btn-primary" tabindex="-1"></button>
+						<button type="button" class="switchBuilder btn btn-xs btn-primary"></button>
 						<span class="linkContainer"></span>
 						<span class="shareBtns">
-							<i class="shareIcon blackHover share_facebook icon-facebook-squared"></i>
-							<i class="shareIcon blackHover share_twitter icon-twitter"></i>
-							<i class="shareIcon blackHover share_bitly icon-link"></i>
+							<i class="shareIcon blackHover share_facebook icon-facebook-squared" tabindex="0"></i>
+							<i class="shareIcon blackHover share_twitter icon-twitter" tabindex="0"></i>
+							<i class="shareIcon blackHover share_bitly icon-link" tabindex="0"></i>
 						</span>
 					</div>
 					<div class="logoContainer">
 						<table class="logoContainerInner">
 							<tr>
 								<td class="logoWrapper">
-									<a class="logoLink" target="_blank" tabindex="-1">
+									<a class="logoLink" target="_blank">
 										<img class="logoImg"/>
 									</a>
 								</td>
@@ -123,8 +123,8 @@
 					</div>
 				</div>
 				<div class="textArea">
-					<h1 class="title" tabindex="0"></h1>
-					<h2 class="subtitle" tabindex="0"></h2>
+					<h1 class="title"></h1>
+					<h2 class="subtitle"></h2>
 				</div>
 				<div class="builder-mask"></div>
 			</div>
@@ -155,14 +155,14 @@
 					<!-- Main Stage -->
 					<td id="mainStagePanel">
 						<div id="mainStagePanelInner">
+							<!-- Mobile info button -->
+							<div id="mobileInfoBtn" class="mobileInfoBtn"></div>
 							<!-- Maps and media are injected here -->
 							<div class="medias"></div>
 							<!-- Loading -->
 							<div id="mainStageLoadingIndicator" class="loadingIndicator">
 								<img src="resources/tpl/viewer/icons/loading-light.gif" />
 							</div>
-							<!-- Mobile info button -->
-							<div id="mobileInfoBtn" class="mobileInfoBtn"></div>
 							<!-- Builder -->
 							<div id="builderQuotes"></div>
 							<div id="builderLanding"></div>
@@ -172,7 +172,7 @@
 						</div>
 						
 						<!-- Description and legend floating panel -->
-						<div id="descLegendPanel" class="descLegendPanel" tabindex="0">
+						<div id="descLegendPanel" class="descLegendPanel">
 							<div class="descLegendPanelInner">
 								<div class="backdrop"></div>
 								<div class="descriptions textEditorContent"></div>

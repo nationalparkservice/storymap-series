@@ -85,6 +85,7 @@ figure figcaption {
 	right: 10px;
 	width: 26px;
 	height: 26px;
+	border: none;
 	background: url('../../../../resources/tpl/viewer/icons/media-fullscreen.png') 0 0;
 	opacity: 0.6;
 	margin-top: 10px;

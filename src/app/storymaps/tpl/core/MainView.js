@@ -223,48 +223,6 @@ define(["lib-build/css!./MainView",
 					if ( e.index == app.data.getCurrentSectionIndex() )
 						updateDescriptionPanelMinHeight();
 				});
-				
-				// Prevent focus on mousedown 
-				// Focus stay allowed with keyboard with 508
-				$("body").on("mousedown", "*", function(e) {
-					if (($(this).is(":focus") || $(this).is(e.target)) && $(this).css("outline-style") == "none") {
-						$(this).css("outline", "none").on("blur", function() {
-							$(this).off("blur").css("outline", "");
-						});
-						
-						// Prevent outline over image-container in description panel - Unsure why needed
-						if ( $(this).parents(".image-container").length ) {
-							$(this).parents(".image-container").css("outline", "none").on("blur", function() {
-								$(this).off("blur").css("outline", "");
-							});
-						}
-						
-						// Prevent outline over image caption container in description panel - Unsure why needed
-						if ( $(this).parents("figure.caption").length ) {
-							$(this).parents("figure.caption").css("outline", "none").on("blur", function() {
-								$(this).off("blur").css("outline", "");
-							});
-						}
-						
-						// Prevent outline over paragraph in description panel - Unsure why needed
-						if ( $(this).parents("p").length ) {
-							$(this).parents("p").css("outline", "none").on("blur", function() {
-								$(this).off("blur").css("outline", "");
-							});
-						}
-						
-						// Prevent outline over title in description panel - Unsure why needed
-						if ( $(this).parents(".accordion-header-content").length ) {
-							$(this).parents(".accordion-header-content").css("outline", "none").on("blur", function() {
-								$(this).off("blur").css("outline", "");
-							});
-						}
-					}
-				});
-				
-				// Tab navigation event from tab bar and side accordion
-				topic.subscribe("story-tab-navigation", onTabNavigation);
-				
 				return true;
 			};
 
@@ -459,6 +417,8 @@ define(["lib-build/css!./MainView",
 				
 				if ( builderView )
 					builderView.updateUI();
+
+				addAccessibilityToDropdowns();
 			}
 
 			function initLayout()
@@ -841,6 +801,41 @@ define(["lib-build/css!./MainView",
 			};
 			
 			
+			function addAccessibilityToDropdowns() {
+				//From: https://medium.com/@mariusc23/making-bootstrap-dropdowns-more-accessible-27b2566abdda#.rlon2pqrx
+				// 1 & 2. adding a couple aria-roles to help screen readers
+				// 3. setting focus on the first item in the list when the dropdown opens
+				// 4. setting focus back to the dropdown toggle when the dropdown closes
+
+				// On dropdown open
+				$(document).on('shown.bs.dropdown', function(event) {
+					var dropdown = $(event.target);
+
+					// Set aria-expanded to true
+					dropdown.find('.dropdown-menu').attr('aria-expanded', true);
+
+					// Set focus on the first link in the dropdown
+					setTimeout(function() {
+						console.log(document.activeElement);
+						//var firstItem = dropdown.find('.dropdown-menu li.visible:first a');
+						var firstItem = dropdown.find('.dropdown-menu li.visible:first a');
+						console.log(firstItem.get(0));
+						firstItem.get(0).focus();
+						console.log(document.activeElement);
+					}, 10);
+				});
+				// On dropdown close
+				$(document).on('hidden.bs.dropdown', function(event) {
+					var dropdown = $(event.target);
+
+					// Set aria-expanded to false
+					dropdown.find('.dropdown-menu').attr('aria-expanded', false);
+
+					// Set focus back to dropdown toggle
+					dropdown.find('.dropdown-toggle').focus();
+				});
+			}
+
 			//
 			// Story events
 			//
@@ -922,62 +917,6 @@ define(["lib-build/css!./MainView",
 						&& entry.media.webmap.legend 
 						&& entry.media.webmap.legend.enable)
 				};
-			}
-			
-			function onTabNavigation(p)
-			{
-				var entryLayoutCfg = getCurrentEntryLayoutCfg(),
-					currEntryIdx = app.data.getCurrentEntryIndex(),
-					navigate = false,
-					nextEntryIdx = -1;
-				
-				if ( ! p || ! p.from || ! p.direction )
-					return;
-				
-				if ( p.from == "nav" ) {
-					if ( app.isInBuilder )
-						navigate = true;
-					if ( currEntryIdx === 0 && p.direction == "backward" )
-						navigate = true;
-					else if ( entryLayoutCfg.description && p.direction == "forward" )
-						app.ui.descLegendPanel.focus();
-					else
-						navigate = true;
-				}
-				else if ( p.from == "panel" && p.direction == "forward" ) {
-					navigate = true;
-				}
-				else if ( p.from == "panel" && p.direction == "backward" ) {
-					topic.publish("story-navigate-entry", currEntryIdx);
-				}
-				
-				if ( navigate ) {
-					if ( p.direction == "forward" ) {
-						if ( currEntryIdx < app.data.getStoryLength() - 1 )
-							nextEntryIdx = currEntryIdx + 1;
-						else {
-							// If story is embedded get out to main page
-							// TODO: the focus should still be given to the header but header is not ready yet
-							if (window != window.top) {
-								parent.document.focus();
-							}
-							else {
-								app.ui.headerDesktop.focus({ area: 'social' });
-							}
-							return false;
-						}
-					}
-					else if ( p.direction == "backward" ) {
-						if ( currEntryIdx > 0 )
-							nextEntryIdx = currEntryIdx - 1;
-						else {
-							app.ui.headerDesktop.focus({ area: 'title' });
-							return false;
-						}
-					}
-					
-					topic.publish("story-navigate-entry", nextEntryIdx);
-				}
 			}
 			
 			this.onHashChange = function()

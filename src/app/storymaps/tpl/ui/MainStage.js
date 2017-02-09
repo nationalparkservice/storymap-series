@@ -711,6 +711,9 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 									app.lastMapExtent = response.map.extent;
 
 								mapContainer.parent().removeClass("has-error");
+
+								addKeyNavToMap(mapContainer, response.map);
+
 							}),
 							lang.hitch(_this, function(){
 								if ( ! isPreloading )
@@ -1299,6 +1302,61 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					"height",
 					$("#mainStagePanel").width() * 9 / 16
 				);
+			}
+
+			function addKeyNavToMap(mapDiv, map)
+			{
+				var addKeyNavToLoadedMap = function() {
+					//Make the map eligible for keyboard focus
+					mapDiv.attr("tabIndex", "0");
+					//A map should only respond to key navigation when it has focus
+					map.disableKeyboardNavigation();
+					//IE focuses on the SVG layers in the map div if this is not set
+					mapDiv.find('svg').attr("focusable", "false");
+					//Add/remove behaviors when the map gets/looses focus
+					mapDiv.focus(function () {
+						//FIXME: the user also has to move the mouse in the map to make it navigable
+						map.enableKeyboardNavigation();
+						//Focus ring is not visible due to 0 margins, so flash the map to indicate focus
+						//IE looses the focus when an element becomes invisible (fades out)
+						if (! has('ie') && ! has('trident')){
+							mapDiv.fadeOut(100).fadeIn(100);
+						}
+						//FIXME: need some way to show the map has focus in IE.
+					});
+					mapDiv.blur(function () {
+						map.disableKeyboardNavigation();
+					});
+
+					//Map elements should be receive key focus, and be 'clickable' with the enter key
+					//would be nice to find or filter on elements that have a click event registered
+					//but there is no cross browser way to do this.
+					var selectors = [
+						".esriAttribution",
+						".logo-med",
+						".esriSimpleSliderIncrementButton",
+						".esriSimpleSliderDecrementButton",
+						".mapCommandLocation"
+					];
+					$.each(selectors, function (i, elem) {
+						mapDiv.find(elem)
+							.attr("tabindex", "0")
+							.on('keydown', function (e) {
+								if (e.keyCode === 13) {
+									$(e.target).click();
+									return false;
+								}
+							});
+					});
+				};
+
+				if (map.loaded) {
+					addKeyNavToLoadedMap();
+				} else {
+					map.on("load", function() {
+						addKeyNavToLoadedMap();
+					});
+				}
 			}
 		};
 	}

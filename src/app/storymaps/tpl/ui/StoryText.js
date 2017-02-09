@@ -29,11 +29,6 @@ define(["dojo/topic",
 			
 			// Add tabindex to not empty elements
 			str2 = $(str2);
-			str2.find('.description > *').each(function(i, elem){
-				var $elem = $(elem);
-				if ( $elem.html() != "&nbsp;" )
-					$elem.attr("tabindex", "0");
-			});
 
 			return str2;
 		}
@@ -149,7 +144,7 @@ define(["dojo/topic",
 					.addClass(floatRight ? "float-right" : "");
 				$(node)
 					.wrap("<div class='image-wrapper'></div>")
-					.after($('<span class="btn-fullscreen"></span>').click(mediaFullScreen))
+					.after($('<button class="btn-fullscreen"></button>').click(mediaFullScreen))
 					.click(mediaFullScreen);
 			});
 			

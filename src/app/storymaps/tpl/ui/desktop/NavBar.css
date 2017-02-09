@@ -111,6 +111,10 @@
 	box-shadow: rgba(0, 0, 0, 0.498039) 1px 1px 3px !important;
 }
 
+.nav-bar .nav-tabs li > a:focus {
+	outline: 0; /* remove focus ring, other styling is applied on focus (see NavBar.js.setColor(() */
+}
+
 /* Visible entries, all entries hover and dropdown */
 /*
 .nav-bar .nav-tabs > li > a,

@@ -128,6 +128,16 @@ define(["lib-build/tpl!./Overview",
 				});
 
 				container.find('.expandStartup').change(onSettingsChange);
+
+				container.find(".collapseBtn")
+					.attr("tabindex", "0")
+					.on('keydown', function (e) {
+						if (e.keyCode === 13) {
+							$(e.target).click();
+							return false;
+						}
+					});
+
 			}
 
 			//
