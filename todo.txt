@@ -1,0 +1,18 @@
+** Define NPS color palates (builder will automatically display and select from changes made in config.js)
+
+** Modify builder header set up:
+ - rename link container to unit code (=name|type|location)
+ - hide esri logo selector
+
+** Header display in builder is confusing (hide ESRI icon and sharing link, show Unit Name/Type/Location)
+
+* In mobile view, on the menu page, there is a linkcontainer, and logo container created dynamically in
+mobile/header.js these elements are turn off (display:none) in nps.css.  It would be nice to replace these with
+elements from the banner i.e the unit name/link, and the Arrowhead logo - This will require a bit more custom
+programming
+
+* Geocode locator (search button) is not styled the same as other buttons.
+
+* Locate/Geocode buttons are bigger than the zoom buttons. (zoom buttons in viewer are smaller than in builder)
+
+* NPS Styling for map controls is not applied in the Builder

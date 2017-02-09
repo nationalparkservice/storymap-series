@@ -1,0 +1,219 @@
+/*
+ * NPS Styling of Map Elements
+ */
+
+.esriSimpleSlider, .arcgisSearch div.searchBtn {
+    border: 1px solid #1a2423;
+    background-color: #747571;
+    color: #FFF;
+    box-shadow: 0 0 15px #888;
+}
+
+.esriSimpleSliderDecrementButton:hover, .esriSimpleSliderIncrementButton:hover,
+.mapCommandLocation:hover, .mapCommandHomeBtn.loading:hover,
+.arcgisSearch div.searchBtn:hover,
+.esriSimpleSliderDecrementButton:focus, .esriSimpleSliderIncrementButton:focus,
+.mapCommandLocation:focus, .mapCommandHomeBtn.loading:focus,
+.arcgisSearch div.searchBtn:focus {
+    background-color: #626159;
+}
+
+.esriSimpleSlider div {
+    width: 26px;
+    height: 26px;
+    font-size: 18px;
+    line-height: 23px;
+}
+
+.mapCommandHomeBtn {
+    background: url(../../resources/tpl/viewer/icons/mapcommand-home2.png);
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: 3px 3px;
+}
+
+.mapCommandLocation {
+    width: 28px;
+    height: 28px;
+    background: url(../../resources/tpl/viewer/icons/mapcommand-location2.png);
+    background-color: #747571;
+    background-size: 18px 18px;
+    background-repeat: no-repeat;
+    background-position: 4px 4px;
+}
+
+.arcgisSearch div.searchBtn {
+    padding: 3px !important; /* equivalent styling in geocoder.css is more specific */
+}
+
+.arcgisSearch .searchGroup .searchInput {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
+.arcgisSearch .searchClose, .arcgisSearch .searchClear {
+    height: 24px;
+    line-height: 24px;
+}
+
+/*
+ * Override esri styling of header elements
+ */
+
+#headerDesktop .rightArea {
+    position: static;
+    float: right;
+    padding-top: 18px !important; /* equivalent styling in Desktop.css is more specific */
+    /*
+    position: absolute;
+    right: 25px;
+    top: 0;
+    padding-top: 9px;
+    padding-right: 25px;
+    text-align: right;
+    font-size: 80%;
+    color: white;
+    */
+}
+
+#headerDesktop.hideDesktop .rightArea { /* embed mode */
+    position: absolute;
+}
+
+
+#headerDesktop.compact .rightArea {
+    padding-top: 14px !important; /* equivalent styling in Desktop.css is more specific */
+}
+
+#headerDesktop .linkSocialContainer {
+    height: auto !important; /* equivalent styling in Desktop.css is more specific */
+}
+
+#headerDesktop .linkContainer {
+    display:none;
+}
+
+#headerDesktop .logoContainer {
+    display:none;
+}
+
+#headerDesktop.compact .linkContainer {
+    display:none;
+}
+
+#headerDesktop.compact .logoContainer {
+    display:none;
+}
+
+#headerDesktop {
+    position: relative;
+    height: 193px;  /* 115 + 78 */
+}
+
+#headerDesktop.compact {
+    height: 138px;  /* 60 + 78 */
+}
+
+body.layout-bullet #headerDesktop.compact {
+    height: 125px; /* 47 + 78 */
+}
+
+/* hide the standard storymap link and esri logo in the mobile list view */
+/* someday we could should this with the unit link and NPS Logo */
+#headerMobile .menu-header {
+    display:none;
+}
+
+
+/*
+ * NPS Header Area
+ */
+
+#npsBanner {
+    height: 78px;
+    background: #000;
+    color: #fff;
+    font-family: arial,helvetica,sans-serif;
+    font-size: 0.65em;
+    width: 100%;
+    overflow:hidden;
+}
+
+#headerDesktop.hideDesktop #npsBanner { /* embed mode */
+    display:none;
+}
+
+#npsUnitName {
+    margin: 0;
+    padding-left: 25px;
+    float: left;
+}
+
+#npsUnitName h1 {
+    line-height: 78px;
+    vertical-align: middle;
+    font-size: 4em;
+    letter-spacing: -0.7px;
+}
+
+#npsUnitName a:link, #npsUnitName a:visited{
+    color: #fff;
+    text-decoration: none;
+}
+
+#npsUnitName a:hover, #npsUnitName a:active{
+    color: #fff;
+    text-decoration: underline;
+}
+
+#npsUnitDetails {
+    float: left;
+    height: 36px;
+    padding-left: 15px;
+    padding-top: 21px; /* (78 - 36)/2 */
+}
+
+#npsUnitType {
+    margin: 0;
+    line-height: 18px;
+    vertical-align: middle;
+}
+
+#npsUnitLocation {
+    margin: 0;
+    line-height: 18px;
+    vertical-align: middle;
+}
+
+#npsLogo {
+    display: table;
+    height: 78px;
+    float: right;
+    padding-right: 25px;
+}
+
+#npsLogo h2  {
+    color: #fff;
+    display: table-cell;
+    font-weight: normal;
+    line-height: 20px;
+    margin: 0;
+    vertical-align: middle;
+    text-decoration: none;
+    padding-right: 10px
+}
+
+#npsLogo h2 a:link, #npsLogo a:visited  {
+    color: #fff;
+    text-decoration: none;
+}
+
+#npsLogo h2 a:hover, #npsLogo h2 a:active {
+    color: #fff;
+    text-decoration: underline;
+}
+
+#npsLogo a {
+    display: table-cell;
+    vertical-align: middle;
+}
