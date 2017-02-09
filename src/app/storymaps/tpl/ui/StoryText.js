@@ -144,7 +144,7 @@ define(["dojo/topic",
 					.addClass(floatRight ? "float-right" : "");
 				$(node)
 					.wrap("<div class='image-wrapper'></div>")
-					.after($('<span class="btn-fullscreen"></span>').click(mediaFullScreen))
+					.after($('<button class="btn-fullscreen"></button>').click(mediaFullScreen))
 					.click(mediaFullScreen);
 			});
 			
