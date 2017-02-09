@@ -8,18 +8,11 @@
 }
 
 .settings-header .settings-simulator {
+	display: none;
 	position: relative;
 	width: 100px;
 	height: 225px;
 	background: url(../../_resources/icons/builder-settings-header-simulator.png);
-}
-
-.settings-header .settings-content {
-	position: absolute;
-	top: 0;
-	left: 120px;
-	margin-top: -2px;
-  right: 0;
 }
 
 .settings-header .fa {
@@ -151,6 +144,10 @@
 	margin-top: 20px;
   position: relative;
   width: 100%;
+}
+
+.settings-header .form1 {
+	display: none;
 }
 
 /*
