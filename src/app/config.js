@@ -43,7 +43,7 @@ app.cfg = {
 			themes: [
 				{
 					name: "tab-default-1",
-					// Green color scheme 
+					// Green color scheme
 					// Group of matching theme across layout
 					group: "default",
 					themeMajor: "white",
@@ -103,7 +103,7 @@ app.cfg = {
 				},
 				{
 					name: "tab-default-3",
-					// Beige color scheme 
+					// Beige color scheme
 					group: "bright",
 					themeMajor: "white",
 					header: "#b5ac8e",
@@ -127,7 +127,7 @@ app.cfg = {
 				},
 				{
 					name: "tab-default-4",
-					// Slate color scheme 
+					// Slate color scheme
 					group: "dark",
 					themeMajor: "black",
 					header: "#a6a496",
@@ -169,6 +169,29 @@ app.cfg = {
 					tab: "#af8e35",
 					tabActive: "#e3d2a3",
 					tabHover: "#d6bd78",
+					tabText: "#FFFFFF",
+					tabTextHover: "#FFFFFF",
+					tabTextActive: "#FFFFFF"
+				},
+				{
+					name: "tab-default-6",
+					group: "dark",
+					themeMajor: "black",
+					header: "#283239",
+					headerTitle: "#FFFFFF",
+					headerText: "#C5D5D5",
+					panel: "#000000",
+					text: "#D8D8D8",
+					textLink: "#CCCCCC",
+					media: "#B8B8B8",
+					mapControls: "#404040",
+					softText: "#C5D5D5",
+					softBtn: "#C5D5D5",
+					esriLogo: "white",
+					esriLogoMobile: "white",
+					tab: "#666666",
+					tabActive: "#B8B8B8",
+					tabHover: "#8D8F91",
 					tabText: "#FFFFFF",
 					tabTextHover: "#FFFFFF",
 					tabTextActive: "#FFFFFF"
@@ -297,6 +320,28 @@ app.cfg = {
 					accordionArrowHover: "#d6bd78",
 					accordionNumber: "#c9a84e",
 					accordionTitle: "#FFFFFF"
+				},
+				{
+					name: "accordion-default-6",
+					group: "dark",
+					themeMajor: "black",
+					header: "#283239",
+					headerTitle: "#FFFFFF",
+					headerText: "#C5D5D5",
+					panel: "#181818",
+					text: "#D8D8D8",
+					textLink: "#CCCCCC",
+					media: "#B8B8B8",
+					mapControls: "#404040",
+					softText: "#C5D5D5",
+					softBtn: "#C5D5D5",
+					esriLogo: "white",
+					esriLogoMobile: "white",
+					accordionArrow: "#B8B8B8",
+					accordionArrowActive: "#FFFFFF",
+					accordionArrowHover: "#C0C0C0",
+					accordionNumber: "#FFFFFF",
+					accordionTitle: "#D8D8D8"
 				}
 			]
 		},
@@ -421,6 +466,29 @@ app.cfg = {
 					tab: "#af8e35",
 					tabActive: "#e3d2a3",
 					tabHover: "#d6bd78",
+					tabText: "#FFFFFF",
+					tabTextHover: "#FFFFFF",
+					tabTextActive: "#FFFFFF"
+				},
+				{
+					name: "bullet-default-6",
+					group: "dark",
+					themeMajor: "black",
+					header: "#283239",
+					headerTitle: "#FFFFFF",
+					headerText: "#C5D5D5",
+					panel: "#000000",
+					text: "#D8D8D8",
+					textLink: "#CCCCCC",
+					media: "#B8B8B8",
+					mapControls: "#404040",
+					softText: "#C5D5D5",
+					softBtn: "#C5D5D5",
+					esriLogo: "white",
+					esriLogoMobile: "white",
+					tab: "#666666",
+					tabActive: "#B8B8B8",
+					tabHover: "#8D8F91",
 					tabText: "#FFFFFF",
 					tabTextHover: "#FFFFFF",
 					tabTextActive: "#FFFFFF"
