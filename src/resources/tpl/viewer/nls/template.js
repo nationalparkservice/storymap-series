@@ -50,7 +50,7 @@ define({
 				lblEnd: "You have reached the end of the story"
 			},
 			headerFromCommon: {
-				storymapsText: "A story map",
+				storymapsText: "An NPS story map",
 				builderButton: "Edit",
 				facebookTooltip: "Share on Facebook",
 				twitterTooltip: "Share on Twitter",
