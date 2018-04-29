@@ -2,8 +2,8 @@ define([],
 	function(){
 		// Header default configuration
 		var HEADER_LOGO_URL = "resources/tpl/viewer/icons/esri-logo.png",
-			HEADER_LOGO_TARGET = "http://www.esri.com",
-			HEADER_LINK_URL = "http://www.nps.gov";
+			HEADER_LOGO_TARGET = "https://www.esri.com",
+			HEADER_LINK_URL = "https://www.nps.gov";
 
 		app.appCfg = {
 			supportWebmapPreviewAGOL: false,
