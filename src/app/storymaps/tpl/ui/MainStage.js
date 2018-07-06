@@ -1499,6 +1499,145 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				);
 			}
 
+			/* mainstage focus management */
+			this.focusActiveMainstage = function(originator, fromAction) {
+				this.returnTo = originator;
+				var activeMainstage = container.find('.mainMediaContainer.active');
+				activeMainstage.off('focus.generic');
+				setTimeout(function() {
+					activeMainstage.focus(); // detach focus listener so it doesn't get triggered twice
+					onMainstageFocus(activeMainstage, fromAction);
+				}, 300);
+			};
+
+			function onMainstageFocus(mainstage, fromAction) {
+				mainstage = mainstage || container.find('.mainMediaContainer.active');
+				var escButton = mainstage.find('.return-to-content');
+				var focusableJqs = mainstage.find(app.appCfg.focusable).filter(':visible').filter(':not(.return-to-content)');
+				var focusableEls = mainstage.get().concat(focusableJqs.get()).concat(escButton.get());
+				if (fromAction) {
+					$('.mediaBackContainer .backButton').off('keydown')
+						.on('keydown', function(e) {
+							backBtnKeydown(e, focusableEls);
+						});
+				}
+				mainstage.off('keydown').on('keydown', function(e) {
+					mainstageKeydown.bind(this)(e, focusableEls);
+				});
+
+			}
+
+			function mainstageKeydown(e, focusableEls) {
+				// on tab, cycle through focusable elements.
+				// at this point, focusableEls should, at minimum,
+				// include the mainstage and esc buttons.
+				if (e.keyCode === 9) {
+					var lastTab = focusableEls[focusableEls.length - 1];
+					var firstTab = focusableEls[0];
+					var backBtn = $('.mediaBackContainer .backButton:visible')[0];
+					var nextTarget;
+					if (e.target === lastTab && !e.shiftKey) {
+						// on last tabbable element, tab forward to either back btn or first tabbable.
+						nextTarget = backBtn || firstTab;
+					} else if (e.target === firstTab && e.shiftKey) {
+						// on first tabbable element, tab backwards to either back btn or last tabbable.
+						nextTarget = backBtn || lastTab;
+					}
+					if (nextTarget) {
+						e.preventDefault();
+						$(nextTarget).focus();
+					}
+					return;
+				}
+
+				// on esc, exit mainstage
+				if (e.keyCode === 27) {
+					somehowLeaveMainstage($(this));
+				}
+			}
+
+			function somehowLeaveMainstage(mainstage) {
+				mainstage = mainstage || container.find('.mainMediaContainer.active');
+				var backBtn = $('.mediaBackContainer .backButton');
+				if (backBtn && backBtn.length && backBtn.is(':visible')) {
+					triggerBackBtn(backBtn);
+				} else {
+					_this.exitMainstage(mainstage);
+				}
+
+			}
+
+			this.exitMainstage = function(mainstage, triggerFromContent) {
+				triggerFromContent = triggerFromContent || this.returnTo;
+				onMapMainstageBlur();
+				attachGenericFocus(mainstage || container.find('.mainMediaContainer.active'));
+				if (triggerFromContent && triggerFromContent.length!== 0) {
+					$(triggerFromContent).focus();
+				} else {
+					app.ui.descLegendPanel.focus();
+					app.ui.accordionPanel.focus();
+				}
+				this.returnTo = null;
+			};
+
+			function attachGenericFocus(mainstage) {
+				mainstage.off('focus.generic')
+					.on('focus.generic', function() {
+						onMainstageFocus(mainstage);
+					});
+			}
+
+			function triggerBackBtn(backBtn) {
+				attachGenericFocus(container.find('.mainMediaContainer.active'));
+				this.returnTo = null;
+				backBtn.trigger('click');
+				backBtn.off('keydown');
+			}
+
+			function backBtnKeydown(e) {
+				// don't need to deal with <enter> or <space> here.
+				// that's taken care of automatically. just need to handle <esc> and tabbing.
+				if (e.keyCode === 9) {
+					e.preventDefault();
+					if (e.shiftKey) {
+						container.find('.return-to-content').focus();
+					} else {
+						container.find('.mainMediaContainer.active').focus();
+					}
+				} else if (e.keyCode === 27) {
+					triggerBackBtn($(e.target));
+				}
+			}
+
+			function onMapMainstageFocus() {
+				var thisMap = app.map;
+				thisMap.enableKeyboardNavigation();
+				var mouseEvents = lang.getObject('navigationManager.mouseEvents', false, thisMap);
+				if (mouseEvents) {
+					mouseEvents._onMouseEnterHandler(new window.Event('mouseenter'));
+				}
+			}
+
+			// it's possible there will be a lot of these stacked on different mainstages,
+			// but there shouldn't be a harm in multiple calls here. worse is no calls, given
+			// the order of the mainstage-exit broadcast.
+			function onMapMainstageBlur() {
+				if( WebApplicationData.getLayoutId() == "float" ) {
+					app.ui.floatingPanel.enableSwiperKeybordEvent();
+				}
+
+				var thisMap = app.map;
+				if (!thisMap) {
+					return;
+				}
+				var mouseEvents = lang.getObject('navigationManager.mouseEvents', false, thisMap);
+
+				thisMap.disableKeyboardNavigation();
+				if (mouseEvents) {
+					mouseEvents._onMouseLeaveHandler(new window.Event('mouseleave'));
+				}
+			}
+
 			function addKeyNavToMap(mapDiv, map)
 			{
 				var addKeyNavToLoadedMap = function() {
