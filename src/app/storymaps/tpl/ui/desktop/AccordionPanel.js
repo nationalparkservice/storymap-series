@@ -2,14 +2,16 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 		"lib-build/css!./AccordionPanel",
 		"lib-build/css!./Common",
 		"../StoryText",
-		"storymaps/common/utils/CommonHelper"
+		"storymaps/common/utils/CommonHelper",
+		"dojo/topic"
 	],
 	function(
 		viewEntryTpl,
 		viewCss,
 		commonCss,
 		StoryText,
-		CommonHelper
+		CommonHelper,
+		topic
 	){
 		return function AccordionPanel(container, isInBuilder, navigationCallback)
 		{
