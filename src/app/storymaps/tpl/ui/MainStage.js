@@ -65,14 +65,16 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					lblDescription: i18n.viewer.mobileInfo.description,
 					lblLegend: i18n.viewer.mobileInfo.legend,
 					lblLegendMobileError: i18n.viewer.mobileInfo.lblLegendMobileError,
-					lblLegendMobileErrorExplain: i18n.viewer.mobileInfo.lblLegendMobileErrorExplain
+					lblLegendMobileErrorExplain: i18n.viewer.mobileInfo.lblLegendMobileErrorExplain,
+					altText: '',
+					focusToPanel: i18n.viewer.a11y.focusContent
 				}));
 			}
 
 			this.updateMainMediaContainers = function()
 			{
-				var webmaps = app.data.getWebmaps(),
-					images = app.data.getImages(),
+				var webmaps = app.data.getWebmapObjects(),
+					images = app.data.getImageObjects(),
 					embeds = app.data.getEmbeds();
 
 				//
@@ -81,11 +83,13 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 				// Add new container
 				$.each(webmaps, function(i, webmap){
-					var mapContainer = $('.mapContainer[data-webmapid="' + webmap + '"]');
+					var mapContainer = $('.mapContainer[data-webmapid="' + webmap.id + '"]');
 					if ( ! mapContainer.length )
 						$("#mainStagePanel .medias").append(mainMediaContainerMapTpl({
-							webmapid: webmap,
+							webmapid: webmap.id,
+							altText: webmap.altText || '',
 							isTemporary: false,
+							focusToPanel: i18n.viewer.a11y.focusContent,
 							lblDescription: i18n.viewer.mobileInfo.description,
 							lblLegend: i18n.viewer.mobileInfo.legend,
 							lblLegendMobileError: i18n.viewer.mobileInfo.lblLegendMobileError,
@@ -94,11 +98,14 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				});
 
 				// Remove unused containers and cleanup maps array
-				$('.mapContainer').each(function(){
+				$('.mapContainer').each(function() {
 					var webmapId = $(this).data('webmapid');
-					if ( $.inArray(webmapId, webmaps) == -1 ) {
+					var found = _.some(webmaps, function(wm) {
+						return webmapId === wm.id;
+					});
+					if (!found) {
 						$(this).parent().remove();
-						if ( app.maps[webmapId] ) {
+						if (app.maps[webmapId]) {
 							app.maps[webmapId].response.map.destroy();
 							delete app.maps[webmapId];
 						}
@@ -110,18 +117,27 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 				//
 
 				// Add new container
-				$.each(images, function(i, imageUrl){
-					var imageContainer = $('.imgContainer[data-src="' + imageUrl + '"]');
+				$.each(images, function(i, img){
+					var imageContainer = $('.imgContainer[data-src="' + img.url + '"]');
 					if ( ! imageContainer.length )
-						$("#mainStagePanel .medias").append(mainMediaContainerImageTpl({
-							url: imageUrl
-						}));
+						$("#mainStagePanel .medias").append(
+							mainMediaContainerImageTpl({
+								url: img.url,
+								altText: img.altText,
+								focusToPanel: i18n.viewer.a11y.focusContent
+							})
+						);
 				});
 
 				// Remove unused containers
-				$('.imgContainer').each(function(){
-					if ( $.inArray($(this).data('src'), images) == -1 )
+				$('.imgContainer').each(function() {
+					var src = $(this).data('src');
+					var found = _.some(images, function(img) {
+						return src === img.url;
+					});
+					if (!found) {
 						$(this).parent().remove();
+					}
 				});
 
 				//
@@ -157,11 +173,14 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						//  multiple iframe but these makes it difficult to center the frame(s)
 						//
 
-						$("#mainStagePanel .medias").append(mainMediaContainerEmbedTpl({
-							url: embedUrl,
-							frameTag: embedInfo.frameTag,
-							// Introduced in V1.1
-							unload: !!(embedInfo.unload === undefined || embedInfo.unload)
+						$("#mainStagePanel .medias").append(
+							mainMediaContainerEmbedTpl({
+								url: embedUrl,
+								frameTag: embedInfo.frameTag,
+								altText: embedInfo.altText || '',
+								focusToPanel: i18n.viewer.a11y.focusContent,
+								// Introduced in V1.1
+								unload: !!(embedInfo.unload === undefined || embedInfo.unload)
 						}));
 
 						// If it's a frame tag
@@ -200,8 +219,17 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						return embedSRC == embedUrl || embedSRC == embed.ts;
 					}).length > 0;
 
-					if ( ! embedInUse )
+					if ( ! embedInUse ) {
 						$(this).parent().remove();
+					}
+				});
+
+				container.find('.mainMediaContainer').on('focus.generic', function() {
+					onMainstageFocus();
+				});
+
+				container.find('.return-to-content').on('click', function() {
+					somehowLeaveMainstage();
 				});
 
 				setMapControlsColor();
@@ -807,6 +835,19 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 			{
 				_this.updateMainStageWithLayoutSettings();
 				setMapControlsColor();
+				var mainStage = mapContainer.parent();
+				if (mainStage[0] === document.activeElement) {
+					onMapMainstageFocus();
+				}
+				else {
+					mainStage.off('focus.map').on('focus.map', onMapMainstageFocus);
+				}
+
+				/* alt text needs to change dynamically because we reuse map containers */
+				var altText = media && media.webmap ? media.webmap.altText : null;
+				if (altText && mainStage) {
+					mainStage.attr('aria-label', altText);
+				}
 
 				try {
 					map.resize();
@@ -1268,6 +1309,8 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 					$("#mainStagePanel .medias").append(mainMediaContainerMapTpl({
 						webmapid: webmapId,
 						isTemporary: false,
+						altText: currentEntry.media.webmap.altText || '',
+						focusToPanel: i18n.viewer.a11y.focusContent,
 						lblDescription: i18n.viewer.mobileInfo.description,
 						lblLegend: i18n.viewer.mobileInfo.legend,
 						lblLegendMobileError: i18n.viewer.mobileInfo.lblLegendMobileError,
@@ -1321,6 +1364,7 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 
 					pictureContainer.parent()
 						.addClass('active')
+						.attr('aria-label', image.altText || '')
 						.toggleClass("animate", !! animateTransition);
 
 					// Load a hidden image in JS
@@ -1439,7 +1483,10 @@ define(["lib-build/tpl!./MainMediaContainerMap",
 						embedContainer.attr('height', height);
 					}
 
-					embedContainer.parent().addClass('active').toggleClass("animate", !! animateTransition);
+					embedContainer.parent()
+						.addClass('active')
+						.toggleClass("animate", !! animateTransition)
+						.attr('aria-label', cfg.altText || '');
 					_this.updateMainStageWithLayoutSettings();
 				}
 			}

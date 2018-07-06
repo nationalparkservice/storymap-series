@@ -95,6 +95,7 @@ define(["lib-build/tpl!./NavBar",
 			this.showEntryIndex = function(index)
 			{
 				var nbEntryVisible = container.find('.nav-tabs > .entry.visible').length;
+				var dropdown = container.find('.dropdown');
 
 				container.find('li').removeClass('active');
 
@@ -105,22 +106,23 @@ define(["lib-build/tpl!./NavBar",
 					if ( ! app.isLoading ) {
 						container.find('.entry').eq(index).find('.entryLbl').focus();
 						// Close the dropdown if open
-						if ( container.find('.dropdown').hasClass("open") )
+						if ( dropdown.hasClass("open") )
 							container.find('.dropdown-toggle').click();
 					}
 				}
 				// The entry is in the more list
 				else {
-					container.find('.dropdown').addClass('active');
-					container.find('.dropdown .entry').eq(index).addClass('active');
+					dropdown.addClass('active');
+					container.find('.dropdown .entry').eq(index).addClass('active').find('a').focus();
 
 					if ( ! app.isLoading ) {
 						// Open the dropdown if not open
-						if ( ! container.find('.dropdown').hasClass("open") )
+						if ( ! dropdown.hasClass("open") ) {
 							container.find('.dropdown-toggle').click();
+						}
 
 						// Focus on the dropdown entry
-						container.find('.dropdown .entry').eq(index).focus();
+						dropdown.find('.entry').eq(index).find('button').focus();
 					}
 				}
 
@@ -149,9 +151,12 @@ define(["lib-build/tpl!./NavBar",
 
 				$.each(_entries, function(i, entry) {
 					var value = entry.title;
+					var sectionNumber = i + 1;
 
-					if ( layout == "bullet" )
+					if ( layout == "bullet" ) {
 						value = layoutOptions.reverse ? nbEntries - i : i + 1;
+						sectionNumber = value;
+					}
 
 					// Can happen when switching from bullet where title isn't mandatory
 					if ( ! value )
@@ -165,13 +170,14 @@ define(["lib-build/tpl!./NavBar",
 					entriesHTML += viewEntryTpl({
 						value: value,
 						tooltip: layout == "bullet" ? entry.title : "",
-						optHtmlClass: entry.status != "PUBLISHED" ? "hidden-entry" : ""
+						optHtmlClass: entry.status != "PUBLISHED" ? "hidden-entry" : "",
+						ariaLabel: i18n.viewer.a11y.toEntryAria.replace('%ENTRY_NUMBER%', sectionNumber).replace('%ENTRY_TITLE%', entry.title)
 					});
 				});
 
 				container.find('.nav-tabs').html(
 					entriesHTML
-					+ viewEntryMoreTpl({ entries: entriesHTML })
+					+ viewEntryMoreTpl({ entries: entriesHTML, dropdownAria: i18n.viewer.a11y.moreEntries })
 				);
 
 				// On touch device for some reason enabling the tooltip sometimes make touching one bullet go to the following

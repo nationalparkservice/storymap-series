@@ -121,7 +121,12 @@ define(["lib-build/tpl!./DescriptionAndLegendPanelEntry",
 
 			this.focus = function()
 			{
-				container.find('.entry.active .description > *[tabindex=0]').eq(0).focus();
+				// either focus the panel or send focus back to the tab/bullet for this section
+				if (container.hasClass('hasDescription')) {
+					container.find('.entry.active .entry-inner .focus-mainstage').eq(0).focus();
+				} else {
+					$('li.entry.active button.entryLbl').focus();
+				}
 			};
 
 			/*
@@ -142,6 +147,7 @@ define(["lib-build/tpl!./DescriptionAndLegendPanelEntry",
 						isInBuilder: app.isInBuilder,
 						optHtmlClass: entry["status"] != "PUBLISHED" ? "hidden-entry" : "",
 						description: entry["description"] || "",
+						lblMainstageBtn: i18n.viewer.common.focusMainstage,
 						editorPlaceholder: app.isInBuilder ? i18n.builder.textEditor.placeholder1 + " " + i18n.builder.textEditor.placeholder2 : ""
 					});
 

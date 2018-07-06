@@ -30,6 +30,7 @@ define(["lib-build/css!./MainView",
     "dojo/topic",
     "esri/arcgis/utils",
     "esri/geometry/Extent",
+    "lib-app/arcgis-html-sanitizer/umd/arcgis-html-sanitizer",
     "../ui/StoryText",
     "lib-build/css!../ui/Common",
     "lib-build/css!../ui/StoryText",
@@ -63,6 +64,7 @@ define(["lib-build/css!./MainView",
     topic,
     arcgisUtils,
     Extent,
+    Sanitizer,
     StoryText
   ){
     /**
@@ -124,6 +126,61 @@ define(["lib-build/css!./MainView",
 
         // Data Model
         app.data = new Data();
+
+        // HTML sanitizer
+        app.sanitizer = new Sanitizer({
+          whiteList: {
+            // styles
+            h1: [],
+            h2: [],
+            h3: [],
+            h4: [],
+            h5: [],
+            h6: [],
+            s: [],
+            u: [],
+            sub: [],
+            sup: [],
+            strike: [],
+            blockquote: [],
+            // containers and structural elements
+            div: [],
+            a: ['data-storymaps', 'data-storymaps-type', 'title'],
+            // lists and tables
+            ol: [],
+            ul: ['type'],
+            td: ['bgcolor'],
+            caption: [],
+            // media
+            figure: [],
+            figcaption: [],
+            iframe: [
+              'src',
+              'height',
+              'width',
+              'border',
+              'allowfullscreen',
+              'mozallowfullscreen',
+              'webkitallowfullscreen',
+              'frameborder',
+              'scrolling',
+              'allowtransparency',
+              'data-unload'
+            ],
+            // other
+            style: ['type']
+          },
+          onIgnoreTagAttr: function(tag, name, value) {
+            // if you take `style` off the universal attribute whitelist, you've gotta
+            // add it back for `li`, `p`, and `strong` above.
+            var universalAttrWhitelist = ['style', 'class', 'dir', 'lang', 'align', 'role'];
+            var attrAllowed = universalAttrWhitelist.indexOf(name) >= 0 || name.match(/^aria-/);
+            if (attrAllowed) {
+              return name + '="' + app.sanitizer.sanitize(value) + '"';
+            }
+          },
+          allowCommentTag: false // this also strips out vector markup elements
+        }, true);
 
         app.ui.mainStage = new MainStage(
           $("#mainStagePanel"),
@@ -214,6 +271,7 @@ define(["lib-build/css!./MainView",
         topic.subscribe("story-update-entry", updateStoryEntry);
         topic.subscribe("story-perform-action-media", app.ui.mainStage.updateMainMediaWithStoryAction);
         topic.subscribe("story-entry-reset-map-extent", resetEntryMapExtent);
+        topic.subscribe('story-focus-entry', focusEntry);
 
         topic.subscribe("ADDEDIT_LOAD_WEBMAP", app.ui.mainStage.loadTmpWebmap);
         topic.subscribe("ADDEDIT_SHOW_WEBMAP", app.ui.mainStage.showWebmapById);
@@ -553,6 +611,7 @@ define(["lib-build/css!./MainView",
         StoryText.createMainMediaActionLink();
         StoryText.createMediaFullScreenButton();
         StoryText.styleSectionPanelContent();
+        StoryText.createMainStageFocusButton();
 
         navigateStoryToIndex(app.data.getCurrentSectionIndex());
 
@@ -765,8 +824,9 @@ define(["lib-build/css!./MainView",
           app.ui.descLegendPanel.resize(cfg);
         }
 
-        if ( hasMobileView() )
+        if ( hasMobileView() ) {
           app.ui.mobileFooter.resize(cfg);
+        }
 
         // Maintain the current section in all layouts
         //  TODO: can we maintain the slider activeIndex while it's not visible? (vis: hidden instead of display?)
@@ -781,6 +841,12 @@ define(["lib-build/css!./MainView",
         var isInIframe = (window.location != window.parent.location) ? true : false;
         if ( ! has("ios") && ! isInIframe ) {
           sizePopup(cfg);
+        }
+
+        if( app.embedBar && app.embedBar.initiated ) {
+          $("#footerMobile").css({"bottom": "26px"});
+          $("#contentPanel").height(cfg.height - 26);
+          $("#mainStagePanelInner, #accordionPanel > .content").height($("#contentPanel").height());
         }
 
         // Stop autoplay in mobile view
@@ -958,6 +1024,14 @@ define(["lib-build/css!./MainView",
         app.ui.mainStage.updateMainMediaWithStoryMainMedia(index, animateMainStageTransition);
 
         $('.mediaBackContainer').hide();
+      }
+
+      function focusEntry(index) {
+        if (index < 0 || index > app.data.getStoryLength() - 1) {
+          return;
+        }
+        app.ui.descLegendPanel.focus();
+        app.ui.accordionPanel.focus();
       }
 
       function getCurrentEntryLayoutCfg()
