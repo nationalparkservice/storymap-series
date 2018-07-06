@@ -38,8 +38,6 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 
 				render(entries, layoutOptions);
 
-				addKeyNavToAccordionPanel();
-
 				this.showEntryIndex(entryIndex, false, true);
 			};
 
@@ -141,7 +139,20 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 
 				container.find(".accordion-header").click(onEntryClick);
 
-				//setAccordionContentHeight();
+				var accordionHeaders = container.find('.accordion-header-content');
+
+				// Fire a click event when focusing through keyboard and prevent double event when clicking with mouse
+				accordionHeaders
+					.focus(function(){
+						if (!$(this).data("mouseDown"))
+							$(this).click();
+					})
+					.mousedown(function(){
+						$(this).data("mouseDown", true);
+					})
+					.mouseup(function(){
+						$(this).removeData("mouseDown");
+					});
 			}
 
 			function setLayout(layoutOptions)
@@ -270,18 +281,6 @@ define(["lib-build/tpl!./AccordionPanelEntry",
 			function initEvents()
 			{
 				//
-			}
-
-			function addKeyNavToAccordionPanel()
-			{
-				container.find(".accordion-header-content")
-					.attr("tabindex", "0")
-					.on('keydown', function(e) {
-						if (e.keyCode === 13) {
-							$(e.target).click();
-							return false;
-						}
-					});
 			}
 		};
 	}
